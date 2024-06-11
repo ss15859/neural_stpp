@@ -28,6 +28,16 @@ MAPS = {
     "pinwheel": None,
     "fmri": None,
     "gmm": None,
+    "ComCat_25": None,
+    "ETAS_25": None,
+    "ETAS_incomplete_25": None,
+    "SaltonSea_10": None,
+    "SanJac_10": None,
+    "SCEDC_20": None,
+    "SCEDC_25": None,
+    "SCEDC_30": None,
+    "WHITE_06": None,
+    "Japan_25": None,
 }
 
 FIGSIZE = 10
@@ -164,10 +174,28 @@ def load_data(data, split="train"):
         return toy_datasets.PinwheelHawkes(split=split)
     elif data == "gmm":
         return toy_datasets.GMMHawkes(split=split)
-    elif data == "fmri":
-        return datasets.BOLD5000(split=split)
+    elif data == "ComCat_25":
+        return datasets.Custom_Earthquakes(data,window = 0.1159775462962963,split=split)
+    elif data == "ETAS_10":
+        return datasets.Custom_Earthquakes(data,window = 67.11465666280851,split=split)
+    elif data == "ETAS_incomplete_10":
+        return datasets.Custom_Earthquakes(data,window = 67.92182066399494,split=split)
+    elif data == "SaltonSea_10":
+        return datasets.Custom_Earthquakes(data,window = 0.12612596064814816,split=split)
+    elif data == "SanJac_10":
+        return datasets.Custom_Earthquakes(data,window = 11.454973599537038,split=split)
+    elif data == "SCEDC_20":
+        return datasets.Custom_Earthquakes(data,window = 0.10785925925925927,split=split)
+    elif data == "SCEDC_25":
+        return datasets.Custom_Earthquakes(data,window = 0.11535810185185186,split=split)
+    elif data == "SCEDC_30":
+        return datasets.Custom_Earthquakes(data,window = 0.41020092592592594,split=split)
+    elif data == "WHITE_06":
+        return datasets.Custom_Earthquakes(data,window = 0.6963701041666667,split=split)
+    elif data == "Japan_25":
+        return datasets.Custom_Earthquakes(data,window = 10.267724189814814,split=split)
     else:
-        raise ValueError(f"Unknown data option {data}")
+        raise ValueError(f"Unknown dataset {data}")
 
 
 if __name__ == "__main__":

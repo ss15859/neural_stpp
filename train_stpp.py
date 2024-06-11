@@ -81,7 +81,7 @@ def set_learning_rate(optimizer, lr):
 def cast(tensor, device):
     return tensor.float().to(device)
 
-
+## t1 for the EarthquakeNPP datasets is found by runnning create_dataset.py for each dataset
 def get_t0_t1(data):
     if data == "citibike":
         return torch.tensor([0.0]), torch.tensor([24.0])
@@ -95,6 +95,26 @@ def get_t0_t1(data):
         return torch.tensor([0.0]), torch.tensor([toy_datasets.END_TIME])
     elif data == "fmri":
         return torch.tensor([0.0]), torch.tensor([10.0])
+    elif data == "ComCat_25":
+        return torch.tensor([0.0]), torch.tensor([5.609645914351852])
+    elif data == "ETAS_25":
+        return torch.tensor([0.0]), torch.tensor([4.442821476802141])
+    elif data == "ETAS_incomplete_25":
+        return torch.tensor([0.0]), torch.tensor([4.442821476802141])
+    elif data == "SaltonSea_10":
+        return torch.tensor([0.0]), torch.tensor([5.986495277777777])
+    elif data == "SanJac_10":
+        return torch.tensor([0.0]), torch.tensor([2.807176423611111])
+    elif data == "SCEDC_20":
+        return torch.tensor([0.0]), torch.tensor([5.888193981481481])
+    elif data == "SCEDC_25":
+        return torch.tensor([0.0]), torch.tensor([11.990039814814814])
+    elif data == "SCEDC_30":
+        return torch.tensor([0.0]), torch.tensor([42.990951736111114])
+    elif data == "WHITE_06":
+        return torch.tensor([0.0]), torch.tensor([5.321553587962963])
+    elif data == "Japan_25":
+        return torch.tensor([0.0]), torch.tensor([8.144051851851852])    
     else:
         raise ValueError(f"Unknown dataset {data}")
 
@@ -338,6 +358,7 @@ def _main(rank, world_size, args, savepath, logger):
     start_time = time.time()
     iteration_counter = itertools.count(begin_itr)
     begin_epoch = begin_itr // len(train_epoch_iter)
+    print('max epochs: ',math.ceil(args.num_iterations / len(train_epoch_iter)))
     for epoch in range(begin_epoch, math.ceil(args.num_iterations / len(train_epoch_iter))):
         batch_iter = train_epoch_iter.next_epoch_itr(shuffle=True)
         for batch in batch_iter:

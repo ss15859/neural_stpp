@@ -4,11 +4,40 @@ import re
 import numpy as np
 import torch
 
+def split_array_by_time_interval(arr, T):
+    # Extract the time data
+    times = arr[:, 0]
+    
+    # Determine the start and end of the entire time range
+    min_time = np.min(times)
+    max_time = np.max(times)
+    
+    # Generate the edges of the intervals
+    interval_edges = np.arange(min_time, max_time + T, T)
+    
+    # Split the array based on the intervals
+    split_arrays = []
+    for i in range(len(interval_edges) - 1):
+        start_time = interval_edges[i]
+        end_time = interval_edges[i + 1]
+        # Get the boolean mask for the current interval
+        mask = (times >= start_time) & (times < end_time)
+        # Filter the sub-array for the current interval
+        sub_array = arr[mask]
+        # Append the sub-array only if it is not empty
+        if sub_array.size > 0:
+            split_arrays.append(sub_array)
+    
+    return split_arrays
+
 
 class SpatioTemporalDataset(torch.utils.data.Dataset):
 
     def __init__(self, train_set, test_set, train):
         self.S_mean, self.S_std = self._standardize(train_set)
+
+        print('S_mean: ', self.S_mean)
+        print('S_std: ', self.S_std)
 
         S_mean_ = torch.cat([torch.zeros(1, 1).to(self.S_mean), self.S_mean], dim=1)
         S_std_ = torch.cat([torch.ones(1, 1).to(self.S_std), self.S_std], dim=1)
@@ -115,6 +144,49 @@ class Earthquakes(SpatioTemporalDataset):
         file_splits = {"train": train_files, "val": val_files, "test": test_files}
         train_set = [dataset[f] for f in train_files]
         split_set = [dataset[f] for f in file_splits[split]]
+        super().__init__(train_set, split_set, split == "train")
+
+    def extra_repr(self):
+        return f"Split: {self.split}"
+
+class Custom_Earthquakes(SpatioTemporalDataset):
+
+    def __init__(self,data,window, split="train"):
+        assert split in ["train", "val", "test"]
+        self.split = split
+        dataset = np.load("data/earthquakes/"+data+".npz")
+
+        train_set = dataset['train'][0]
+        split_set = dataset[split][0]
+
+        # seq_length = 200
+
+        train_set = split_array_by_time_interval(train_set,window)
+        split_set = split_array_by_time_interval(split_set,window)
+
+
+
+        normalized_data = []
+        for batch in train_set:
+            normalized_batch = batch.copy()  # Make a copy to avoid modifying the original data
+            first_time_value = batch[0, 0]  # Get the first time value
+            normalized_batch[:, 0] -= first_time_value  # Subtract the first time value from all time values
+            assert np.all(normalized_batch[:, 0] >= 0), "Not all time values are non-negative after normalization."
+            assert np.all(np.ediff1d(normalized_batch[:, 0]) > 0), "Time values are not strictly increasing."
+            normalized_data.append(normalized_batch)
+        train_set = normalized_data
+
+        normalized_data = []
+        for batch in split_set:
+            normalized_batch = batch.copy()  # Make a copy to avoid modifying the original data
+            first_time_value = batch[0, 0]  # Get the first time value
+            normalized_batch[:, 0] -= first_time_value  # Subtract the first time value from all time values
+            assert np.all(normalized_batch[:, 0] >= 0), "Not all time values are non-negative after normalization."
+            assert np.all(np.ediff1d(normalized_batch[:, 0]) > 0), "Time values are not strictly increasing."
+            normalized_data.append(normalized_batch)
+        split_set = normalized_data
+
+
         super().__init__(train_set, split_set, split == "train")
 
     def extra_repr(self):
