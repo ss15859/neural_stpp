@@ -483,7 +483,7 @@ if __name__ == "__main__":
     parser.add_argument("--solve_reverse", action="store_true")
     parser.add_argument("--l2_attn", action="store_true")
     parser.add_argument("--naive_hutch", action="store_true")
-    parser.add_argument("--tol", type=float, default=1e-4)
+    parser.add_argument("--tol", type=float, default=1e-3)
     parser.add_argument("--otreg_strength", type=float, default=1e-4)
     parser.add_argument("--tpp_otreg_strength", type=float, default=1e-4)
 
