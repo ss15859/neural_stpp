@@ -12,7 +12,7 @@ pwd
 echo $CUDA_VISIBLE_DEVICES
 
 # Load local python environment
-source activate autoint_cu112
+source activate earthquakeNPP
 
 
 python train_stpp.py --data $data --model $model --tpp neural --l2_attn --tol $tol --seed $seed
