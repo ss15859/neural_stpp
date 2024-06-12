@@ -175,25 +175,25 @@ def load_data(data, split="train"):
     elif data == "gmm":
         return toy_datasets.GMMHawkes(split=split)
     elif data == "ComCat_25":
-        return datasets.Custom_Earthquakes(data,window = 0.1159775462962963,split=split)
-    elif data == "ETAS_10":
-        return datasets.Custom_Earthquakes(data,window = 67.11465666280851,split=split)
-    elif data == "ETAS_incomplete_10":
-        return datasets.Custom_Earthquakes(data,window = 67.92182066399494,split=split)
+        return datasets.Custom_Earthquakes(data,window = 5.609645914351852,split=split)
+    elif data == "ETAS_25":
+        return datasets.Custom_Earthquakes(data,window = 4.442821476802141,split=split)
+    elif data == "ETAS_incomplete_25":
+        return datasets.Custom_Earthquakes(data,window = 4.442821476802141,split=split)
     elif data == "SaltonSea_10":
-        return datasets.Custom_Earthquakes(data,window = 0.12612596064814816,split=split)
+        return datasets.Custom_Earthquakes(data,window = 5.986495277777777,split=split)
     elif data == "SanJac_10":
-        return datasets.Custom_Earthquakes(data,window = 11.454973599537038,split=split)
+        return datasets.Custom_Earthquakes(data,window = 2.807176423611111,split=split)
     elif data == "SCEDC_20":
-        return datasets.Custom_Earthquakes(data,window = 0.10785925925925927,split=split)
+        return datasets.Custom_Earthquakes(data,window = 5.888193981481481,split=split)
     elif data == "SCEDC_25":
-        return datasets.Custom_Earthquakes(data,window = 0.11535810185185186,split=split)
+        return datasets.Custom_Earthquakes(data,window = 11.990039814814814,split=split)
     elif data == "SCEDC_30":
-        return datasets.Custom_Earthquakes(data,window = 0.41020092592592594,split=split)
+        return datasets.Custom_Earthquakes(data,window = 42.990951736111114,split=split)
     elif data == "WHITE_06":
-        return datasets.Custom_Earthquakes(data,window = 0.6963701041666667,split=split)
+        return datasets.Custom_Earthquakes(data,window = 5.321553587962963,split=split)
     elif data == "Japan_25":
-        return datasets.Custom_Earthquakes(data,window = 10.267724189814814,split=split)
+        return datasets.Custom_Earthquakes(data,window = 8.144051851851852,split=split)
     else:
         raise ValueError(f"Unknown dataset {data}")
 

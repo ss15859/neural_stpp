@@ -36,9 +36,6 @@ class SpatioTemporalDataset(torch.utils.data.Dataset):
     def __init__(self, train_set, test_set, train):
         self.S_mean, self.S_std = self._standardize(train_set)
 
-        print('S_mean: ', self.S_mean)
-        print('S_std: ', self.S_std)
-
         S_mean_ = torch.cat([torch.zeros(1, 1).to(self.S_mean), self.S_mean], dim=1)
         S_std_ = torch.cat([torch.ones(1, 1).to(self.S_std), self.S_std], dim=1)
         self.dataset = [(torch.tensor(seq) - S_mean_) / S_std_ for seq in (train_set if train else test_set)]

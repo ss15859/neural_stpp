@@ -60,8 +60,8 @@ def plot_event_histogram(df, interval, title):
 
 
 
-if not os.path.exists(filepath):
-# if True:
+# if not os.path.exists(filepath):
+if True:
 
 	df = pd.read_csv(
 					config.catalog.path,
@@ -160,7 +160,7 @@ if not os.path.exists(filepath):
 		S_std = S.std(0, keepdims=True)
 		return S_mean, S_std
 
-_, std = standardize(sequences['train'])
+	_, std = standardize(sequences['train'])
 
-log_det_inv = -np.log((std[0][0]*std[0][1]))
-print('log_det_inv: ',log_det_inv)
+	log_det_inv = -np.log((std[0][0]*std[0][1]))
+	print('log_det_inv: ',log_det_inv)
