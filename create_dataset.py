@@ -56,8 +56,12 @@ def plot_event_histogram(df, interval, title):
 	plt.ylabel('Frequency')
 	plt.show()
 
-# if not os.path.exists(filepath):
-if True:
+
+
+
+
+if not os.path.exists(filepath):
+# if True:
 
 	df = pd.read_csv(
 					config.catalog.path,
@@ -140,6 +144,10 @@ if True:
 
 	sequences = {'train':train_ar,'val':val_ar,'test':test_ar}
 	np.savez(filepath, **sequences)
+
+
+#######################################################################################
+
 
 # Since NSTPP standardises the spatial region, we need to calculate \log(det(Sigma))
 # to subtract from the final spatial log-likelihood score
