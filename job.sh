@@ -11,6 +11,8 @@ pwd
 
 echo $CUDA_VISIBLE_DEVICES
 
+PYTORCH_CUDA_ALLOC_CONF=backend:cudaMallocAsync
+
 # Load local python environment
 source activate earthquakeNPP
 

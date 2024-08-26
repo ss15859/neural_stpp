@@ -97,9 +97,9 @@ if True:
 
 
 	# Plot histograms for train_df, val_df, and test_df
-	plot_event_histogram(train_df, optimal_T, 'Train Data Histogram')
-	plot_event_histogram(val_df, optimal_T, 'Validation Data Histogram')
-	plot_event_histogram(test_df, optimal_T, 'Test Data Histogram')
+	# plot_event_histogram(train_df, optimal_T, 'Train Data Histogram')
+	# plot_event_histogram(val_df, optimal_T, 'Validation Data Histogram')
+	# plot_event_histogram(test_df, optimal_T, 'Test Data Histogram')
 
 
 	## convert datetime to days
@@ -143,7 +143,7 @@ if True:
 	test_ar = np.expand_dims(test_df.to_numpy(), axis=0)
 
 	sequences = {'train':train_ar,'val':val_ar,'test':test_ar}
-	np.savez(filepath, **sequences)
+	# np.savez(filepath, **sequences)
 
 
 #######################################################################################

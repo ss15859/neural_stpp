@@ -4,7 +4,7 @@ import re
 import numpy as np
 import torch
 
-def split_array_by_time_interval(arr, T):
+def split_array_by_time_interval(arr, T,split,max_events=350):
     # Extract the time data
     times = arr[:, 0]
     
@@ -26,7 +26,10 @@ def split_array_by_time_interval(arr, T):
         sub_array = arr[mask]
         # Append the sub-array only if it is not empty
         if sub_array.size > 0:
-            split_arrays.append(sub_array)
+            if split == 'train':
+                split_arrays.append(sub_array[:max_events])
+            else:
+                split_arrays.append(sub_array)
     
     return split_arrays
 
@@ -61,7 +64,7 @@ class SpatioTemporalDataset(torch.utils.data.Dataset):
 
     def batch_by_size(self, max_events):
         try:
-            from data_utils_fast import batch_by_size_fast
+            from data_utils_fast import batch_by_size_fast, batch_fixed_shapes_fast
         except ImportError:
             raise ImportError('Please run `python setup.py build_ext --inplace`')
 
@@ -156,12 +159,8 @@ class Custom_Earthquakes(SpatioTemporalDataset):
         train_set = dataset['train'][0]
         split_set = dataset[split][0]
 
-        # seq_length = 200
-
-        train_set = split_array_by_time_interval(train_set,window)
-        split_set = split_array_by_time_interval(split_set,window)
-
-
+        train_set = split_array_by_time_interval(train_set,window,split = 'train')
+        split_set = split_array_by_time_interval(split_set,window,split = split)
 
         normalized_data = []
         for batch in train_set:
