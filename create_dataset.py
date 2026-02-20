@@ -143,7 +143,7 @@ if True:
 	test_ar = np.expand_dims(test_df.to_numpy(), axis=0)
 
 	sequences = {'train':train_ar,'val':val_ar,'test':test_ar}
-	# np.savez(filepath, **sequences)
+	np.savez(filepath, **sequences)
 
 
 #######################################################################################
