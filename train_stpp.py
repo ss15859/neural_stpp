@@ -359,6 +359,14 @@ def _main(rank, world_size, args, savepath, logger):
     iteration_counter = itertools.count(begin_itr)
     begin_epoch = begin_itr // len(train_epoch_iter)
     print('max epochs: ',math.ceil(args.num_iterations / len(train_epoch_iter)))
+
+    best_val_time = -float("inf")
+    best_val_space = -float("inf")
+
+    best_at = {"itr": None, "epoch": None}
+    best_test_time = None
+    best_test_space = None
+
     for epoch in range(begin_epoch, math.ceil(args.num_iterations / len(train_epoch_iter))):
         batch_iter = train_epoch_iter.next_epoch_itr(shuffle=True)
         for batch in batch_iter:
@@ -438,13 +446,33 @@ def _main(rank, world_size, args, savepath, logger):
                 start_time = time.time()
 
             if rank == 0 and itr % args.testfreq == 0:
-                # ema.swap()
                 val_space_loglik, val_time_loglik = validate(model, val_loader, t0, t1, device)
                 test_space_loglik, test_time_loglik = validate(model, test_loader, t0, t1, device)
-                # ema.swap()
+
+                val_total = val_time_loglik + val_space_loglik
+                best_val_total = best_val_time + best_val_space
+
+                # Always log current
                 logger.info(
-                    f"[Test] Iter {itr} | Val Temporal {val_time_loglik:.4f} | Val Spatial {val_space_loglik:.4f}"
-                    f" | Test Temporal {test_time_loglik:.4f} | Test Spatial {test_space_loglik:.4f}")
+                    f"[Eval] Iter {itr} | "
+                    f"Val TLL {val_time_loglik:.4f} | Val SLL {val_space_loglik:.4f} | Val Total {val_total:.4f} || "
+                    f"Test TLL {test_time_loglik:.4f} | Test SLL {test_space_loglik:.4f}"
+                )
+
+                # If this is the best validation so far, store the paired test metrics
+                if val_total > best_val_total:
+                    best_val_time = val_time_loglik
+                    best_val_space = val_space_loglik
+                    best_test_time = test_time_loglik
+                    best_test_space = test_space_loglik
+                    best_at = {"itr": itr, "epoch": epoch}
+
+                    logger.info(
+                        f"[BEST@VAL] Iter {itr} | "
+                        f"Best Val TLL {best_val_time:.4f} | Best Val SLL {best_val_space:.4f} | "
+                        f"=> Test TLL {best_test_time:.4f} | Test SLL {best_test_space:.4f}"
+        )
+
 
                 tb_writer.add_scalar("val/temporal_loss", val_time_loglik, itr)
                 tb_writer.add_scalar("val/spatial_loss", val_space_loglik, itr)
